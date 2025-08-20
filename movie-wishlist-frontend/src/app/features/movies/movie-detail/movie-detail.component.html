@@ -1,0 +1,124 @@
+<div class="container" *ngIf="movie">
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="movie-detail" *ngIf="movie && !loading">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="movie-poster">
+          <img *ngIf="movie.posterUrl" [src]="movie.posterUrl" [alt]="movie.title">
+          <div *ngIf="!movie.posterUrl" class="no-poster">
+            <i class="material-icons">movie</i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="movie-header">
+          <h1>{{ movie.title }} <span *ngIf="movie.releaseYear">({{ movie.releaseYear }})</span></h1>
+          <div class="movie-status">
+            <span class="badge" [ngClass]="{'wishlist': movie.status === 'WISHLIST', 'watched': movie.status === 'WATCHED'}">{{ movie.status }}</span>
+          </div>
+        </div>
+
+        <div class="movie-info">
+          <p *ngIf="movie.genre"><strong>Genre:</strong> {{ movie.genre }}</p>
+          <p *ngIf="movie.runtime"><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
+          <p *ngIf="movie.rating"><strong>Your Rating:</strong> {{ movie.rating }}/10</p>
+          <p *ngIf="movie.createdAt"><strong>Added:</strong> {{ movie.createdAt | date:'medium' }}</p>
+          <p *ngIf="movie.updatedAt"><strong>Last Updated:</strong> {{ movie.updatedAt | date:'medium' }}</p>
+        </div>
+
+        <div class="movie-review" *ngIf="movie.review">
+          <h3>Your Review</h3>
+          <p>{{ movie.review }}</p>
+        </div>
+
+        <div class="movie-actions">
+          <button class="btn btn-primary" (click)="editMovie()">
+            <i class="material-icons">edit</i> Edit
+          </button>
+          <button class="btn btn-danger" (click)="deleteMovie()">
+            <i class="material-icons">delete</i> Delete
+          </button>
+          <button *ngIf="movie.status === 'WISHLIST'" class="btn btn-success" (click)="changeStatus('WATCHED')">
+            <i class="material-icons">visibility</i> Mark as Watched
+          </button>
+          <button *ngIf="movie.status === 'WATCHED'" class="btn btn-warning" (click)="changeStatus('WISHLIST')">
+            <i class="material-icons">bookmark</i> Move to Wishlist
+          </button>
+        </div>
+
+        <div class="movie-social">
+          <div class="likes">
+            <button class="btn-like" [ngClass]="{'liked': movie.userLiked}" (click)="toggleLike()">
+              <i class="material-icons">favorite</i>
+              <span>{{ movie.likesCount || 0 }} likes</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comments-section">
+      <h3>Comments ({{ comments.length }})</h3>
+      
+      <form [formGroup]="commentForm" (ngSubmit)="submitComment()" class="comment-form">
+        <div class="mb-3">
+          <textarea 
+            formControlName="content" 
+            class="form-control" 
+            rows="3" 
+            placeholder="Write a comment..."
+            [ngClass]="{ 'is-invalid': commentForm.get('content')?.invalid && commentForm.get('content')?.touched }"
+          ></textarea>
+          <div class="invalid-feedback" *ngIf="commentForm.get('content')?.errors?.['required']">
+            Comment cannot be empty.
+          </div>
+          <div class="invalid-feedback" *ngIf="commentForm.get('content')?.errors?.['maxlength']">
+            Comment cannot exceed 500 characters.
+          </div>
+        </div>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="commentForm.invalid || commentLoading"
+        >
+          <span *ngIf="commentLoading" class="spinner-border spinner-border-sm me-1"></span>
+          Post Comment
+        </button>
+      </form>
+
+      <div class="comments-list">
+        <div class="comment" *ngFor="let comment of comments">
+          <div class="comment-header">
+            <span class="comment-author">{{ comment.username }}</span>
+            <span class="comment-date">{{ comment.createdAt | date:'medium' }}</span>
+          </div>
+          <div class="comment-content">
+            {{ comment.content }}
+          </div>
+        </div>
+
+        <div class="no-comments" *ngIf="comments.length === 0">
+          <p>No comments yet. Be the first to comment!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="!movie && !loading && !error">
+  <div class="not-found">
+    <i class="material-icons">movie_filter</i>
+    <h2>Movie Not Found</h2>
+    <p>The movie you're looking for doesn't exist or has been removed.</p>
+    <button class="btn btn-primary" routerLink="/movies/wishlist">Back to Wishlist</button>
+  </div>
+</div>

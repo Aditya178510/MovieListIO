@@ -1,0 +1,72 @@
+<div class="movie-grid" *ngIf="movies && movies.length > 0">
+  <div class="movie-card" *ngFor="let movie of movies" (click)="viewDetails(movie.id)">
+    <div class="movie-poster">
+      <img *ngIf="movie.posterUrl" [src]="movie.posterUrl" [alt]="movie.title">
+      <div *ngIf="!movie.posterUrl" class="no-poster">
+        <i class="material-icons">movie</i>
+      </div>
+      <div class="movie-status" *ngIf="movie.status">
+        <span class="badge" [ngClass]="{'wishlist': movie.status === 'WISHLIST', 'watched': movie.status === 'WATCHED'}">{{ movie.status }}</span>
+      </div>
+    </div>
+    <div class="movie-info">
+      <h3 class="movie-title">{{ movie.title }}</h3>
+      <p class="movie-year" *ngIf="movie.releaseYear">{{ movie.releaseYear }}</p>
+      <p class="movie-genre" *ngIf="movie.genre">{{ movie.genre }}</p>
+      <div class="movie-rating" *ngIf="movie.rating">
+        <span class="rating-value">{{ movie.rating }}/10</span>
+        <div class="rating-stars">
+          <i class="material-icons" *ngFor="let star of [1,2,3,4,5]" 
+             [ngClass]="{'filled': star <= movie.rating/2, 'half-filled': star === ceil(movie.rating/2) && movie.rating % 2 !== 0}">
+            star
+          </i>
+        </div>
+      </div>
+      <div class="movie-social" *ngIf="!isDiscover">
+        <span class="likes">
+          <i class="material-icons" [ngClass]="{'liked': movie.userLiked}" (click)="likeMovie(movie.id, $event)">
+            favorite
+          </i>
+          <span>{{ movie.likesCount || 0 }}</span>
+        </span>
+        <span class="comments" *ngIf="movie.commentsCount !== undefined">
+          <i class="material-icons">comment</i>
+          <span>{{ movie.commentsCount }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="movie-actions" *ngIf="showActions">
+      <button class="btn-action edit" (click)="editMovie(movie.id, $event)" *ngIf="!isDiscover">
+        <i class="material-icons">edit</i>
+      </button>
+      <button class="btn-action delete" (click)="deleteMovie(movie.id, $event)" *ngIf="!isDiscover">
+        <i class="material-icons">delete</i>
+      </button>
+      <button class="btn-action watched" (click)="markAsWatched(movie.id, $event)" *ngIf="isWishlist || (isDiscover && !movie.status)">
+        <i class="material-icons">visibility</i>
+      </button>
+      <button class="btn-action wishlist" (click)="addToWishlist(movie.id, $event)" *ngIf="isWatched || (isDiscover && !movie.status)">
+        <i class="material-icons">bookmark</i>
+      </button>
+      <button class="btn-action add" (click)="addNewMovie(movie, $event)" *ngIf="isDiscover && !movie.id">
+        <i class="material-icons">add</i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="empty-state" *ngIf="!movies || movies.length === 0">
+  <i class="material-icons">movie_filter</i>
+  <h3>
+    <ng-container *ngIf="isWishlist">No movies in your wishlist</ng-container>
+    <ng-container *ngIf="isWatched">No watched movies</ng-container>
+    <ng-container *ngIf="isDiscover">No movies found</ng-container>
+    <ng-container *ngIf="!isWishlist && !isWatched && !isDiscover">No movies available</ng-container>
+  </h3>
+  <p>
+    <ng-container *ngIf="isWishlist">Add movies to your wishlist to see them here</ng-container>
+    <ng-container *ngIf="isWatched">Mark movies as watched to see them here</ng-container>
+    <ng-container *ngIf="isDiscover">Try searching for movies</ng-container>
+    <ng-container *ngIf="!isWishlist && !isWatched && !isDiscover">No movies found</ng-container>
+  </p>
+</div>

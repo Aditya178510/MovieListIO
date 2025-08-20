@@ -1,0 +1,23 @@
+# Docker Compose Override for Development
+version: '3.8'
+
+services:
+  # Backend Spring Boot application - development settings
+  backend:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_JPA_SHOW_SQL=true
+    volumes:
+      - ./movie-wishlist-backend:/app
+    # Enable remote debugging
+    ports:
+      - "5005:5005"
+    command: ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
+
+  # Frontend Angular application - development settings
+  frontend:
+    volumes:
+      - ./movie-wishlist-frontend/src:/app/src
+    command: ["npm", "run", "start"]
+    ports:
+      - "4200:4200"

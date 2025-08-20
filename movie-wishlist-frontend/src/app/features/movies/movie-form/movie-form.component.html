@@ -1,0 +1,176 @@
+<div class="container">
+  <div class="form-header">
+    <h1>{{ isEditMode ? 'Edit' : 'Add' }} Movie</h1>
+  </div>
+
+  <div class="loading-spinner" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="card" *ngIf="!loading">
+    <div class="card-body">
+      <form [formGroup]="movieForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label">Title *</label>
+              <input 
+                type="text" 
+                id="title" 
+                formControlName="title" 
+                class="form-control"
+                [ngClass]="{ 'is-invalid': movieForm.get('title')?.invalid && movieForm.get('title')?.touched }"
+              >
+              <div class="invalid-feedback" *ngIf="movieForm.get('title')?.errors?.['required']">
+                Title is required.
+              </div>
+              <div class="invalid-feedback" *ngIf="movieForm.get('title')?.errors?.['maxlength']">
+                Title cannot exceed 100 characters.
+              </div>
+            </div>
+
+            <!-- Genre -->
+            <div class="mb-3">
+              <label for="genre" class="form-label">Genre</label>
+              <input 
+                type="text" 
+                id="genre" 
+                formControlName="genre" 
+                class="form-control"
+                [ngClass]="{ 'is-invalid': movieForm.get('genre')?.invalid && movieForm.get('genre')?.touched }"
+              >
+              <div class="invalid-feedback" *ngIf="movieForm.get('genre')?.errors?.['maxlength']">
+                Genre cannot exceed 100 characters.
+              </div>
+            </div>
+
+            <!-- Release Year -->
+            <div class="mb-3">
+              <label for="releaseYear" class="form-label">Release Year</label>
+              <input 
+                type="number" 
+                id="releaseYear" 
+                formControlName="releaseYear" 
+                class="form-control"
+                [ngClass]="{ 'is-invalid': movieForm.get('releaseYear')?.invalid && movieForm.get('releaseYear')?.touched }"
+              >
+              <div class="invalid-feedback" *ngIf="movieForm.get('releaseYear')?.errors?.['min']">
+                Release year must be 1900 or later.
+              </div>
+              <div class="invalid-feedback" *ngIf="movieForm.get('releaseYear')?.errors?.['max']">
+                Release year cannot be more than 5 years in the future.
+              </div>
+            </div>
+
+            <!-- Runtime -->
+            <div class="mb-3">
+              <label for="runtime" class="form-label">Runtime (minutes)</label>
+              <input 
+                type="number" 
+                id="runtime" 
+                formControlName="runtime" 
+                class="form-control"
+                [ngClass]="{ 'is-invalid': movieForm.get('runtime')?.invalid && movieForm.get('runtime')?.touched }"
+              >
+              <div class="invalid-feedback" *ngIf="movieForm.get('runtime')?.errors?.['min']">
+                Runtime must be at least 1 minute.
+              </div>
+              <div class="invalid-feedback" *ngIf="movieForm.get('runtime')?.errors?.['max']">
+                Runtime cannot exceed 999 minutes.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <!-- Poster URL -->
+            <div class="mb-3">
+              <label for="posterUrl" class="form-label">Poster URL</label>
+              <input 
+                type="text" 
+                id="posterUrl" 
+                formControlName="posterUrl" 
+                class="form-control"
+                [ngClass]="{ 'is-invalid': movieForm.get('posterUrl')?.invalid && movieForm.get('posterUrl')?.touched }"
+              >
+              <div class="invalid-feedback" *ngIf="movieForm.get('posterUrl')?.errors?.['maxlength']">
+                Poster URL cannot exceed 255 characters.
+              </div>
+              <div class="poster-preview" *ngIf="movieForm.get('posterUrl')?.value">
+                <img [src]="movieForm.get('posterUrl')?.value" alt="Movie poster preview">
+              </div>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-3">
+              <label for="status" class="form-label">Status *</label>
+              <select 
+                id="status" 
+                formControlName="status" 
+                class="form-select"
+                [ngClass]="{ 'is-invalid': movieForm.get('status')?.invalid && movieForm.get('status')?.touched }"
+              >
+                <option value="WISHLIST">Wishlist</option>
+                <option value="WATCHED">Watched</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="movieForm.get('status')?.errors?.['required']">
+                Status is required.
+              </div>
+            </div>
+
+            <!-- Rating (only for WATCHED status) -->
+            <div class="mb-3" *ngIf="movieForm.get('status')?.value === 'WATCHED'">
+              <label for="rating" class="form-label">Rating (1-10)</label>
+              <input 
+                type="number" 
+                id="rating" 
+                formControlName="rating" 
+                class="form-control"
+                [ngClass]="{ 'is-invalid': movieForm.get('rating')?.invalid && movieForm.get('rating')?.touched }"
+              >
+              <div class="invalid-feedback" *ngIf="movieForm.get('rating')?.errors?.['min']">
+                Rating must be at least 1.
+              </div>
+              <div class="invalid-feedback" *ngIf="movieForm.get('rating')?.errors?.['max']">
+                Rating cannot exceed 10.
+              </div>
+            </div>
+
+            <!-- Review (only for WATCHED status) -->
+            <div class="mb-3" *ngIf="movieForm.get('status')?.value === 'WATCHED'">
+              <label for="review" class="form-label">Review</label>
+              <textarea 
+                id="review" 
+                formControlName="review" 
+                class="form-control" 
+                rows="4"
+                [ngClass]="{ 'is-invalid': movieForm.get('review')?.invalid && movieForm.get('review')?.touched }"
+              ></textarea>
+              <div class="invalid-feedback" *ngIf="movieForm.get('review')?.errors?.['maxlength']">
+                Review cannot exceed 1000 characters.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="movieForm.invalid || submitting"
+          >
+            <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1"></span>
+            {{ isEditMode ? 'Update' : 'Add' }} Movie
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

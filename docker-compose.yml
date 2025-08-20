@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Backend Spring Boot application
+  backend:
+    build:
+      context: ./movie-wishlist-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/moviewishlist
+      - SPRING_DATASOURCE_USERNAME=movieuser
+      - SPRING_DATASOURCE_PASSWORD=moviepassword
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_DATABASE-PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JWT_SECRET=${JWT_SECRET:-movieWishlistSecretKey123456789012345678901234567890}
+      - TMDB_API_KEY=${TMDB_API_KEY:-your-tmdb-api-key}
+      - TMDB_API_BASE_URL=https://api.themoviedb.org/3
+    depends_on:
+      - db
+
+  # Frontend Angular application
+  frontend:
+    build:
+      context: ./movie-wishlist-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  # PostgreSQL Database
+  db:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=moviewishlist
+      - POSTGRES_USER=movieuser
+      - POSTGRES_PASSWORD=moviepassword
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

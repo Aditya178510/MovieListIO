@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="discover-header">
+    <h1>Discover Movies</h1>
+    <div class="search-box">
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Search for movies..." 
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="searchMovies()"
+      >
+      <button class="btn btn-primary" (click)="searchMovies()" [disabled]="searchLoading">
+        <i class="material-icons">search</i>
+        <span *ngIf="!searchLoading">Search</span>
+        <span *ngIf="searchLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+      <button class="btn btn-outline-secondary" *ngIf="searchResults.length > 0" (click)="clearSearch()">
+        <i class="material-icons">clear</i> Clear
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <!-- Search Results -->
+  <div *ngIf="searchResults.length > 0">
+    <h2>Search Results</h2>
+    <app-movie-list 
+      [movies]="searchResults" 
+      [showActions]="true"
+      [isDiscover]="true">
+    </app-movie-list>
+  </div>
+
+  <!-- Trending Movies -->
+  <div *ngIf="!searchResults.length">
+    <h2>Trending Movies</h2>
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <app-movie-list 
+      [movies]="trendingMovies" 
+      [showActions]="true"
+      [isDiscover]="true">
+    </app-movie-list>
+  </div>
+</div>

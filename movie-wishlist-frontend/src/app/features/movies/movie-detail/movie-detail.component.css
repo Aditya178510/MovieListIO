@@ -1,0 +1,212 @@
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+}
+
+.movie-detail {
+  margin: 20px 0;
+}
+
+.movie-poster {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.movie-poster img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.no-poster {
+  background-color: #f0f0f0;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-poster i {
+  font-size: 64px;
+  color: #999;
+}
+
+.movie-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.movie-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+.movie-status .badge {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: lowercase;
+}
+
+.badge.wishlist {
+  background-color: #ff9800;
+  color: white;
+}
+
+.badge.watched {
+  background-color: #4caf50;
+  color: white;
+}
+
+.movie-info {
+  margin-bottom: 20px;
+}
+
+.movie-info p {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #555;
+}
+
+.movie-review {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+}
+
+.movie-review h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.movie-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.movie-actions .btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.movie-social {
+  margin-bottom: 20px;
+}
+
+.btn-like {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-like:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-like i {
+  color: #999;
+  font-size: 20px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-like.liked i {
+  color: #f44336;
+  transform: scale(1.1);
+}
+
+.comments-section {
+  margin-top: 40px;
+}
+
+.comments-section h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.comment-form {
+  margin-bottom: 30px;
+}
+
+.comments-list {
+  margin-top: 20px;
+}
+
+.comment {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 15px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment-date {
+  font-size: 12px;
+  color: #777;
+}
+
+.comment-content {
+  color: #555;
+  line-height: 1.5;
+}
+
+.no-comments {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-style: italic;
+}
+
+.not-found {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.not-found i {
+  font-size: 64px;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+.not-found h2 {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.not-found p {
+  margin-bottom: 20px;
+  color: #777;
+}
